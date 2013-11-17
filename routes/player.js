@@ -1,63 +1,63 @@
 
 /*
- * methods for cat resource
+ * methods for player resource
  */
 
 var helpers = require("../helpers");
  	tv4 = require("tv4"),
-	schemas = require("../schemas/cat.js");
+	schemas = require("../schemas/player.js");
 
-exports.getCats = function(db) {
+exports.getPlayers = function(db) {
 	return function(req, res) {
 		
 		var model = {},
-			collection = db.get('cats');
+			collection = db.get('players');
 		
 		collection.find({},function(e, result){
 			if(typeof result === "object" && result.length > 0) {
-				model.cats = result;
+				model.players = result;
 	        	res.status(200).json(model);
 			} else {
-				// no cats found
-				model = helpers.addMessage(model, "no cats found");
+				// no players found
+				model = helpers.addMessage(model, "no players found");
 		        res.status(404).json(model);	
 			}
 	    });
 	};
 };
 
-exports.getCat = function(db) {
+exports.getPlayer = function(db) {
 	return function(req, res) {
 		
 		var id = req.params.id,
 			model = {},
-			collection = db.get('cats');
+			collection = db.get('players');
 			
 		collection.find({ _id: id },function(e, result){	
         	if(result.length > 0) {
-				model.cat = result[0];
+				model.player = result[0];
 	        	res.status(200).json(model);
 			} else {
-				// no cats found
-				model = helpers.addMessage(model, "cat not found");
+				// no players found
+				model = helpers.addMessage(model, "player not found");
 		        res.status(404).json(model);	
 			}
 	    });
 	};
 };
 
-exports.createCat = function(db) {
+exports.createPlayer = function(db) {
 	return function(req, res) {
 		
-		var cat = req.body,
+		var player = req.body,
 			model = {},
-			collection = db.get('cats'),
-			schema = schemas.cat;
+			collection = db.get('players'),
+			schema = schemas.player;
 		
-		if(tv4.validate(cat, schema)) {
-			collection.insert(cat,function(e, result){
+		if(tv4.validate(player, schema)) {
+			collection.insert(player,function(e, result){
 	        	if(result) {
-					model.cat = result;
+					model.player = result;
 		        	res.status(200).json(model);
 				} 
 				if (e) {
@@ -73,17 +73,17 @@ exports.createCat = function(db) {
 	};
 };
 
-exports.updateCat = function(db) {
+exports.updatePlayer = function(db) {
 	return function(req, res) {
 		
 		var id = req.params.id,
-			cat = req.body,
+			player = req.body,
 			model = {},
-			collection = db.get('cats'),
-			schema = schemas.cat;
+			collection = db.get('players'),
+			schema = schemas.player;
 		
-		if(tv4.validate(cat, schema)) {
-			collection.updateById(id, cat,function(e, result){
+		if(tv4.validate(player, schema)) {
+			collection.updateById(id, player,function(e, result){
 	        	if(result) {
 					res.status(200).json(model);
 				} 
@@ -100,19 +100,19 @@ exports.updateCat = function(db) {
 	};
 };
 
-exports.deleteCat = function(db) {
+exports.deletePlayer = function(db) {
 	return function(req, res) {
 		
 		var id = req.params.id,
 			model = {},
-			collection = db.get('cats');
+			collection = db.get('players');
 			
 		collection.remove({ _id: id },function(e, result){
         	if(result > 0) {
 				res.status(200).json(model);
 			} else {
-				// no cats found
-				model = helpers.addMessage(model, "cat not found");
+				// no players found
+				model = helpers.addMessage(model, "player not found");
 		        res.status(404).json(model);	
 			}
 	    });

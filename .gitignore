@@ -1,2 +1,5 @@
 data
 node_modules
+*.log
+*.css
+Backup*
