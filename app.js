@@ -5,9 +5,15 @@
 
 var express = require('express');
 var routes = require('./routes');
-var user = require('./routes/user');
+var cat = require('./routes/cat');
+// var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+
+// init database
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk('localhost:27017/snapcat');
 
 var app = express();
 
@@ -20,7 +26,7 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
+app.use(express.cookieParser('snap that kitty!'));
 app.use(express.session());
 app.use(app.router);
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
@@ -31,8 +37,12 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+var id = /[\da-f]/i;
+
 app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/cats', cat.getCats(db));
+app.get('/cat/:id', cat.getCat(db));
+app.put('/cat/', cat.createCat(db));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
